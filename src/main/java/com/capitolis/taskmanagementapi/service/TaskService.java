@@ -33,12 +33,12 @@ public class TaskService {
     }
 
 
-    // Create a new task
+    // Create a new task and save it to the database
     public Task createTask(Task task) {
         return taskRepository.save(task);
     }
 
-    // Get all tasks
+    // Get all tasks from the database
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
     }
@@ -50,7 +50,7 @@ public class TaskService {
 
     // Update a task
     public Task updateTask(Long id, Task taskDetails) {
-        Task task = taskRepository.findById(id) // Finding the task according to Id
+        Task task = taskRepository.findById(id) // Finding the task according to ID
                 .orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
 
         // Actual update
@@ -59,10 +59,11 @@ public class TaskService {
         task.setStatus(taskDetails.getStatus());
         task.setDueDate(taskDetails.getDueDate());
 
+        // Saving the updated task back to the database
         return taskRepository.save(task);
     }
 
-    // Delete a task
+    // Delete a task from the database
     public void deleteTask(Long id) {
         if (!taskRepository.existsById(id)) { // checking if the task exists before trying to delete it.
             throw new RuntimeException("Task not found with id: " + id);
