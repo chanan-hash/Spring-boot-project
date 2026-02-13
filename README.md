@@ -601,5 +601,3 @@ This is a learning project. Feel free to:
 **Purpose:** Learning Spring Boot ecosystem for Capitolis position
 
 ---
-
-**Ready to continue? Next: Creating the Controller layer for REST API endpoints!** 🚀
