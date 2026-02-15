@@ -8,13 +8,16 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
+import org.springframework.core.annotation.Order;
 
 import java.awt.Desktop;
 import java.net.URI;
 import java.util.Map;
 import java.util.Scanner;
 
-@Component
+@Component // annotation is a fundamental building block. It marks a Java class as a Spring-managed component (often called a "bean").
+            //When the application starts, Spring scans your code for this annotation and automatically creates an instance of the class to manage it within the Application Context.
+@Order(1)
 public class BrowserOpener implements CommandLineRunner {
 
     // @Value allows us to inject configuration properties from application.properties or application.yml
@@ -111,7 +114,8 @@ public class BrowserOpener implements CommandLineRunner {
 //        }
 //    }
 
-    private void selectStrategyInteractively() {
+    // PUBLIC METHOD - Can be called from TaskConsoleManager
+    public void selectStrategyInteractively() {
         Map<String, UrlStrategy> strategies = context.getBeansOfType(UrlStrategy.class);
         Scanner scanner = new Scanner(System.in);
 
