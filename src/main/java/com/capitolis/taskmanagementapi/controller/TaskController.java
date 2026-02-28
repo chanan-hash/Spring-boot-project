@@ -34,7 +34,7 @@ public class TaskController {
 
     // GET /api/tasks - Get all tasks
     @GetMapping // @GetMapping annotation indicates that this method will handle HTTP GET requests to
-    public ResponseEntity<List<Task>> getAllTasks() {
+    public ResponseEntity<List<Task>> getAllTasks() { // We don't want only tp return List<Task> because we also want to include HTTP status codes (or more HTTP features) in our response. By using ResponseEntity<List<Task>>, we can return both the list of tasks and the appropriate HTTP status code (e.g., 200 OK) in a single response object.
         List<Task> tasks = taskService.getAllTasks(); // Calling the service method to get all tasks from the database
         return ResponseEntity.ok(tasks); // Returning the list of tasks wrapped in a ResponseEntity with HTTP status 200 OK
 //        return new ResponseEntity<>(tasks, HttpStatus.OK); // Returning the list of tasks wrapped in a ResponseEntity with HTTP status 200 OK
