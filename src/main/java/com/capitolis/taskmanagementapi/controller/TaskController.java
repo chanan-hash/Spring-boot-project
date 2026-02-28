@@ -51,7 +51,7 @@ public class TaskController {
 
     // POST /api/tasks - Create new task
     @PostMapping
-    public ResponseEntity<Task> createTask(@RequestBody Task task) { // @RequestBody annotation indicates that the task object will be populated with the data from the request body when a POST request is made to this endpoint. This allows us to receive a JSON representation of a Task in the request body and automatically convert it into a Task object that we can use in our service layer to create a new task in the database.
+    public ResponseEntity<Task> createTask(@RequestBody Task task) { // @RequestBody annotation indicates that the task object will be populated with the data from the request body when a POST request is made to this endpoint. This allows us to receive a JSON representation of a Task in the request body and automatically convert it from json into a Task object that we can use in our service layer to create a new task in the database.
         Task createdTask = taskService.createTask(task);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
     }
