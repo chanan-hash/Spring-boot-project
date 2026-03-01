@@ -23,9 +23,11 @@ import java.util.Optional;
 
 public class TaskController {
 
-    private final TaskService taskService; // TaskService is injected into the TaskController to allow it to perform business logic and interact with the repository layer for managing tasks. By using @Autowired, Spring will automatically inject an instance of TaskService when creating an instance of TaskController, enabling us to use the service's methods for creating, retrieving, updating, and deleting tasks.
+//    @Autowired // @Autowired annotation on a field create the class constructor in inject (put) automatically this field into the constructor
+//    private TaskService taskService; // TaskService is injected into the TaskController to allow it to perform business logic and interact with the repository layer for managing tasks. By using @Autowired, Spring will automatically inject an instance of TaskService when creating an instance of TaskController, enabling us to use the service's methods for creating, retrieving, updating, and deleting tasks.
 
-
+    // Equal to the above field injection, but with constructor injection, which is generally recommended for better testability and immutability
+    private final TaskService taskService; // Base practice, more threadsafe and easier to test (can create 'new').
     @Autowired // @Autowired annotation is used to automatically inject the TaskService dependency into the TaskController class. This allows us to use the service's methods for performing business logic and interacting with the repository layer for managing tasks without needing to manually instantiate the service.
     // Simple constructor-based dependency injection.
     public TaskController(TaskService taskService) {

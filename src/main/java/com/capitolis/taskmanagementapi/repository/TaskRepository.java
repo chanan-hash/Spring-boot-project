@@ -43,9 +43,9 @@ public interface TaskRepository extends JpaRepository<Task, Long> { // inheritin
     // Find tasks by title containing a keyword (case-insensitive)
     List<Task> findByTitleContainingIgnoreCase(String keyword);
 
-    // Find all tasks ordered by due date
+    // Find all tasks ordered by due date, to be called in the service layer
     List<Task> findAllByOrderByDueDateAsc();
 
-    // Check if a task with a specific title exists
+    // Check if a task with a specific title exists, to be called in the service layer
     boolean existsByTitle(String title);
 }
