@@ -6,7 +6,6 @@ package com.capitolis.taskmanagementapi.repository;
 import com.capitolis.taskmanagementapi.model.Task;
 import com.capitolis.taskmanagementapi.model.TaskStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -20,15 +19,15 @@ import java.util.List;
  * taskRepository.deleteById(1L);       // Delete by ID
  * taskRepository.count();              // Count all tasks
  * taskRepository.existsById(1L);       // Check if exists
- *
+
  * Spring generates SQL queries automatically based on method names!
- *
+
  * findByStatus(TaskStatus.TODO)
  * // Spring generates: SELECT * FROM tasks WHERE status = 'TODO'
- *
+
  * findByTitleContainingIgnoreCase("meeting")
  * // Spring generates: SELECT * FROM tasks WHERE LOWER(title) LIKE LOWER('%meeting%')
- *
+
  * findAllByOrderByDueDateAsc()
  * // Spring generates: SELECT * FROM tasks ORDER BY due_date ASC
  */
@@ -44,8 +43,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> { // inheritin
     List<Task> findByTitleContainingIgnoreCase(String keyword);
 
     // Find all tasks ordered by due date, to be called in the service layer
-    List<Task> findAllByOrderByDueDateAsc();
+//    List<Task> findAllByOrderByDueDateAsc();
 
     // Check if a task with a specific title exists, to be called in the service layer
-    boolean existsByTitle(String title);
+//    boolean existsByTitle(String title);
 }
