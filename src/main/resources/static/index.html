@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; margin-bottom: 30px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
+        button { background: #4CAF50; color: white; padding: 12px 30px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-right: 10px; }
+        button:hover { background: #45a049; }
+        button.delete { background: #f44336; }
+        button.delete:hover { background: #da190b; }
+        .task-list { margin-top: 30px; }
+        .task-item { background: #f9f9f9; padding: 15px; margin-bottom: 10px; border-radius: 5px; border-left: 4px solid #4CAF50; }
+        .task-item.TODO { border-color: #ff9800; }
+        .task-item.IN_PROGRESS { border-color: #2196F3; }
+        .task-item.DONE { border-color: #4CAF50; }
+        .task-title { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
+        .task-status { display: inline-block; padding: 3px 10px; border-radius: 3px; font-size: 12px; font-weight: bold; color: white; }
+        .task-status.TODO { background: #ff9800; }
+        .task-status.IN_PROGRESS { background: #2196F3; }
+        .task-status.DONE { background: #4CAF50; }
+        .task-actions { margin-top: 10px; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📋 Task Manager</h1>
+
+    <!-- Add Task Form -->
+    <div class="form-group">
+        <label>Title:</label>
+        <input type="text" id="title" placeholder="Enter task title">
+    </div>
+
+    <div class="form-group">
+        <label>Description:</label>
+        <textarea id="description" rows="3" placeholder="Enter task description (optional)"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Status:</label>
+        <select id="status">
+            <option value="TODO">TODO</option>
+            <option value="IN_PROGRESS">IN_PROGRESS</option>
+            <option value="DONE">DONE</option>
+        </select>
+    </div>
+
+    <button onclick="addTask()">➕ Add Task</button>
+    <button onclick="loadTasks()">🔄 Refresh</button>
+
+    <!-- Task List -->
+    <div class="task-list">
+        <h2>All Tasks</h2>
+        <div id="tasks"></div>
+    </div>
+</div>
+
+<script>
+    // Load tasks when page loads
+    window.onload = loadTasks;
+
+    // Load all tasks
+    async function loadTasks() {
+        try {
+            const response = await fetch('/api/tasks');
+            const tasks = await response.json();
+
+            const tasksDiv = document.getElementById('tasks');
+
+            if (tasks.length === 0) {
+                tasksDiv.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">No tasks yet. Add your first task above!</p>';
+                return;
+            }
+
+            tasksDiv.innerHTML = tasks.map(task => `
+                <div class="task-item ${task.status}">
+                    <div class="task-title">${task.title}</div>
+                    <span class="task-status ${task.status}">${task.status}</span>
+                    ${task.description ? `<p style="margin-top: 10px; color: #666;">${task.description}</p>` : ''}
+                    <div class="task-actions">
+                        ${task.status !== 'DONE' ? `<button onclick="markComplete(${task.id})">✅ Mark Complete</button>` : ''}
+                        <button class="delete" onclick="deleteTask(${task.id})">🗑️ Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        } catch (error) {
+            alert('Error loading tasks: ' + error.message);
+        }
+    }
+
+    // Add new task
+    async function addTask() {
+        const title = document.getElementById('title').value;
+        const description = document.getElementById('description').value;
+        const status = document.getElementById('status').value;
+
+        if (!title) {
+            alert('Please enter a title');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/tasks', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, description, status })
+            });
+
+            if (response.ok) {
+                document.getElementById('title').value = '';
+                document.getElementById('description').value = '';
+                document.getElementById('status').value = 'TODO';
+                loadTasks();
+            }
+        } catch (error) {
+            alert('Error adding task: ' + error.message);
+        }
+    }
+
+    // Mark task as complete
+    async function markComplete(id) {
+        try {
+            const response = await fetch(`/api/tasks/${id}/complete`, {
+                method: 'PATCH'
+            });
+
+            if (response.ok) {
+                loadTasks();
+            }
+        } catch (error) {
+            alert('Error marking task complete: ' + error.message);
+        }
+    }
+
+    // Delete task
+    async function deleteTask(id) {
+        if (!confirm('Are you sure you want to delete this task?')) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/tasks/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                loadTasks();
+            }
+        } catch (error) {
+            alert('Error deleting task: ' + error.message);
+        }
+    }
+</script>
+</body>
+</html>
