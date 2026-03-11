@@ -1,0 +1,26 @@
+# Ignore compiled files
+target/
+*.class
+
+# Ignore IDE files
+.idea/
+*.iml
+.vscode/
+
+# Ignore Git
+.git/
+.gitignore
+
+# Ignore Maven wrapper
+.mvn/
+
+# Ignore database files
+data/
+*.mv.db
+
+# Ignore logs
+*.log
+
+# Ignore OS files
+.DS_Store
+Thumbs.db

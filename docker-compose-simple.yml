@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  # Spring Boot Application with H2
+  task-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: task-api
+    environment:
+      # Use H2 file-based database
+      SPRING_DATASOURCE_URL: jdbc:h2:file:/app/data/taskdb
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.h2.Driver
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD: ""
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.H2Dialect
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+      # Enable H2 Console
+      SPRING_H2_CONSOLE_ENABLED: "true"
+      SPRING_H2_CONSOLE_PATH: /h2-console
+      # Disable browser auto-open in Docker
+      APP_BROWSER_AUTO_OPEN: "false"
+      APP_CONSOLE_TASK_MANAGER_ENABLED: "false"
+    ports:
+      - "8080:8080"
+    volumes:
+      # Persist H2 database on host machine
+      - ./data:/app/data
+    restart: unless-stopped
