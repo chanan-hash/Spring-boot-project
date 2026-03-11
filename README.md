@@ -227,6 +227,166 @@ Status: 1 (TODO)
 
 ---
 
+
+
+## 🐳 Running with Docker
+
+### Quick Start
+
+```bash
+# Build and run with docker-compose
+docker-compose up --build
+
+# Or run in background
+docker-compose up -d --build
+```
+
+**That's it!** Your app is now running in a container.
+
+---
+
+### Access the Application
+
+Once running, open your browser to:
+
+| Feature | URL |
+|---------|-----|
+| **Web UI** | http://localhost:8080/ |
+| **REST API** | http://localhost:8080/api/tasks |
+| **H2 Console** | http://localhost:8080/h2-console |
+
+#### H2 Console Login:
+- **JDBC URL:** `jdbc:h2:mem:taskdb`
+- **Username:** `sa`
+- **Password:** (leave empty)
+- Click **"Connect"**
+
+---
+
+### Docker Commands
+
+```bash
+# Build the image
+docker-compose build
+
+# Start containers
+docker-compose up
+
+# Start in background (detached mode)
+docker-compose up -d
+
+# Stop containers
+docker-compose down
+
+# View logs
+docker-compose logs -f
+
+# Rebuild and restart
+docker-compose up --build
+```
+
+---
+
+### Running the Image Directly
+
+After building, you can also run the image directly:
+
+```bash
+# Run the container
+docker run -p 8080:8080 task-api:latest
+
+# Or with a custom name
+docker run -p 8080:8080 --name my-task-api task-api:latest
+```
+
+---
+
+### Push to Docker Hub (Optional)
+
+Share your containerized app:
+
+```bash
+# Login to Docker Hub
+docker login
+
+# Tag the image
+docker tag task-api:latest YOUR_USERNAME/task-api:latest
+
+# Push to Docker Hub
+docker push YOUR_USERNAME/task-api:latest
+```
+
+**Now anyone can run your app:**
+```bash
+docker run -p 8080:8080 YOUR_USERNAME/task-api:latest
+```
+
+---
+
+### Configuration
+
+**Database Type:**  
+The Docker version uses an **in-memory H2 database** by default (data resets on restart).
+
+**To change settings, edit `application.properties`:**
+
+```properties
+# Use in-memory database (default for Docker)
+spring.datasource.url=jdbc:h2:mem:taskdb
+
+# Or use file-based database (persists data)
+spring.datasource.url=jdbc:h2:file:./data/taskdb
+
+# Disable interactive features in Docker
+app.browser.auto-open=false
+app.console.task-manager.enabled=false
+
+# Allow H2 console access from Docker
+spring.h2.console.settings.web-allow-others=true
+```
+
+**After changing configuration:**
+```bash
+docker-compose build
+docker-compose up
+```
+
+---
+
+### What's Different in Docker?
+
+| Feature | Local Run (JAR) | Docker Run |
+|---------|----------------|------------|
+| **Console Menu** | ✅ Available | ❌ Not available (use Web UI) |
+| **Browser Auto-Open** | ✅ Available | ❌ Disabled |
+| **Web UI** | ✅ Available | ✅ Available |
+| **REST API** | ✅ Available | ✅ Available |
+| **H2 Console** | ✅ Available | ✅ Available |
+
+**In Docker, use the Web UI (http://localhost:8080/) instead of the console menu!**
+
+---
+
+### Troubleshooting
+
+**Can't access the app?**
+- Check container is running: `docker ps`
+- View logs: `docker-compose logs -f`
+
+**Port already in use?**
+- Change port in `docker-compose.yml`:
+  ```yaml
+  ports:
+    - "8081:8080"  # Use 8081 instead
+  ```
+
+**H2 Console connection failed?**
+- Make sure JDBC URL is: `jdbc:h2:mem:taskdb`
+- Username: `sa`
+- Password: (empty)
+
+---
+
 ## 👤 Author
 
 **Chanan** - Created for Spring Boot learning (February 2026)
